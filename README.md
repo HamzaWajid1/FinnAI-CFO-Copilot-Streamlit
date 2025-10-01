@@ -1,55 +1,66 @@
-title: "💼 CFO Copilot (FP&A Coding Assignment)"
+## 💼 CFO Copilot (FP&A Coding Assignment)
 
-description: |
-  This is a mini "CFO Copilot" built as part of a coding assessment.
-  The app allows a CFO to ask questions about monthly financials (from CSV/Excel files)
-  and get back concise answers with charts.
+This project is a mini "CFO Copilot" that answers finance questions from monthly CSVs and returns concise, board-ready answers with charts.
 
-features:
-  - Natural language Q&A interface for finance metrics
-  - Metrics supported:
-      - Revenue vs Budget (USD)
-      - Gross Margin % = (Revenue – COGS) / Revenue
-      - Opex total grouped by category
-      - EBITDA = Revenue – COGS – Opex
-      - Cash runway = cash ÷ average monthly net burn (last 3 months)
-  - Inline charts (matplotlib) in Streamlit
-  - Simple, board-ready answers
-  - Unit tests with pytest
+### Features
+- **Natural language Q&A** about finance metrics via `Streamlit` UI
+- **Metrics supported** via `agent/tools.py`:
+  - Revenue vs Budget (USD)
+  - Gross Margin % = (Revenue – COGS) / Revenue
+  - Opex total grouped by category
+  - EBITDA = Revenue – COGS – Opex
+  - Cash Runway = latest cash ÷ avg monthly net burn (last 3 months)
+- **Inline charts** rendered with `matplotlib`
+- **Export to PDF** button for the current answer + chart
+- **Unit tests** with `pytest`
 
-project_structure: |
-  app.py             # Streamlit app (entry point)
-  requirements.txt   # Python dependencies
-  README.md          # Documentation
-  agent/             # Agent and data tools
-    ├── agent.py     # Intent classifier + dispatcher
-    └── tools.py     # Finance metric functions
-  fixtures/          # Data files (actuals, budget, fx, cash)
-  tests/             # Unit tests
-    └── test_tools.py
+### Project Structure
+```
+app.py             # Streamlit app (entry point)
+requirements.txt   # Python dependencies
+README.md          # Documentation
+agent/
+  ├── agent.py     # Lightweight intent/dispatch to metric functions
+  └── tools.py     # Finance metric functions
+fixtures/          # CSV data: data.csv, budget.csv, fx.csv, cash.csv
+tests/
+  └── test_tools.py
+```
 
-setup:
-  steps:
-    - "Clone the repository"
-    - "cd 'FinnAI coding assignment'"
-    - "python -m venv venv"
-    - ".\\venv\\Scripts\\activate   # Windows"
-    - "pip install -r requirements.txt"
+### Setup
+```bash
+python -m venv venv
+./venv/Scripts/activate   # Windows
+pip install -r requirements.txt
+```
 
-run_app: |
-  streamlit run app.py
+### Run the App
+```bash
+streamlit run app.py
+```
 
-run_tests: |
-  pytest
+### Run Tests
+```bash
+pytest
+```
 
-data:
-  location: "fixtures/data.xlsx"
-  sheets:
-    - actuals
-    - budget
-    - fx
-    - cash
+### Data Inputs (fixtures/)
+- `data.csv` (actuals): `month, entity, account_category, amount, currency`
+- `budget.csv`: same columns as actuals
+- `fx.csv`: `month, currency, rate_to_usd`
+- `cash.csv`: `month, entity, cash_usd`
 
-demo_examples:
-  - "What was June 2025 revenue vs budget?"
-  - "Show Gross Margin % trend"
+The code hardens joins and drops bad rows so messy CSV tails won’t break calculations.
+
+### How It Works
+- `agent/agent.py` parses a user question and routes it to a function in `agent/tools.py`.
+- Each function returns `(text, fig)` where `fig` is a Matplotlib figure (or `None`).
+- `app.py` loads fixtures once, calls `run_agent`, displays the text and chart, and can export a simple PDF snapshot.
+
+### Notes
+- This project uses a non-interactive Matplotlib backend (`Agg`) for compatibility with tests and headless environments.
+- Virtual environments and generated artifacts are excluded via `.gitignore`.
+
+### Example Questions
+- “What was January 2023 revenue vs budget for ParentCo?”
+- “Show Gross Margin % trend for ParentCo.”
