@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Test/coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Editors/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Build
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+
+# Caches
+*.cache/
+
+# OneDrive temp files
+~$*
+
+# Data outputs
+*.pdf
+
+# Allow fixtures to be tracked explicitly
+!fixtures/
+
